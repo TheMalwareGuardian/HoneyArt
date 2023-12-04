@@ -1,36 +1,45 @@
 # Despliegue de MetaHoneypots IT en [organización]
 
+<div style="text-align:center">
+    <img src="images/network.png" />
+</div>
+
 ## Índice
 
 1. [Resumen](#resumen)
 2. [Qué es un Honeypot?](#queesunhoneypot)
 3. [Categorías de Honeypots](#categoriasdehoneypots)
 4. [MetaHoneypots y su Aplicación Práctica](#metahoneypotsysuaplicacionpractica)
-5. [Tendencias Actuales](#tendenciasactuales)
-6. [Implementación Estratégica](#implementacionestrategica)
-    1. [Introducción](#implementacionestrategicaintroduccion)
-    2. [Honeypots](#implementacionestrategicahoneypots)
-7. [Referencias](#referencias)
+5. [Implementación Ejecutiva](#implementacionejecutiva)
+    - [Tendencias Actuales](#implementacionejecutivatendenciasactuales)
+    - [Despliegue](#implementacionejecutivadespliegue)
+    - [Listado de Honeypots](#implementacionejecutivalistadodehoneypots)
+5. [Implementación Estratégica](#implementacionestrategica)
+    - [Entorno](#implementacionestrategicaentorno)
+    - [Honeypots de Producción - Simulados](#implementacionestrategicahoneypotsdeproduccionsimulados)
+        - [QHoneypots](#implementacionestrategicahoneypotsdeproduccionsimuladosqhoneypots)
+        - [T-PoT](#implementacionestrategicahoneypotsdeproduccionsimuladostpot)
+    - [Honeypots de Producción - Real](#implementacionestrategicahoneypotsdeproduccionreal)
+        - [Directorio Activo](#implementacionestrategicahoneypotsdeproduccionrealdirectorioactivo)
+6. [Referencias](#referencias)
 
 
 <div id='resumen'/>
 
 ## Resumen
 
-El presente documento tiene como objetivo principal explorar y comprender el estado del arte en el ámbito de los honeypots, centrando la investigación en identificar las últimas tendencias y mejores prácticas relacionadas con la implementación y gestión eficaz.
+El presente documento tiene como objetivo principal explorar y comprender el estado del arte en el ámbito de los honeypots, centrando la investigación en identificar las últimas tendencias y mejores prácticas relacionadas con su implementación y gestión eficaz.
 
-Al analizar el estado actual de esta tecnología, se busca establecer una base sólida de conocimiento que oriente la definición de configuraciones específicas aplicables a la organización, evaluando su eficacia en la detección y respuesta a amenazas cibernéticas.
+Al analizar el estado actual de esta tecnología, se busca establecer una base sólida de conocimiento que oriente la definición de configuraciones específicas, aplicables a la organización. Además, se explorarán casos de uso prácticos y estudios que ilustren cómo las organizaciones han implementado con éxito honeypots en sus estrategias de defensa para mejorar la eficacia en la detección y la respuesta a amenazas cibernéticas.
 
-Se explorarán casos de uso prácticos y estudios de investigación que ilustren cómo las organizaciones han implementado con éxito honeypots en sus estrategias de defensa, definiendo configuraciones personalizadas que se alineen con los objetivos y las necesidades particulares de la organización para mejorar la postura de seguridad de manera proactiva.
-
-En resumen, este documento busca proporcionar una guía integral sobre el estado del arte de los honeypots y, a su vez, servir como base para la formulación de estrategias de implementación y configuración específicas que fortalezcan la ciberseguridad de la organización en un entorno digital en constante evolución.
+En resumen, este documento busca proporcionar una guía integral sobre el estado del arte de los honeypots y, a su vez, servir como base para la formulación de estrategias de implementación y configuraciones personalizadas que fortalezcan la ciberseguridad de la organización de manera proactiva.
 
 
 <div id='queesunhoneypot'/>
 
 ## Qué es un Honeypot?
 
-Los honeypots son sistemas de seguridad que se diseñan para atraer, detectar y analizar amenazas cibernéticas en una red, los cuales han evolucionado como una estrategia de seguridad crucial. Estos sistemas actúan como señuelos estratégicamente desplegados, con el propósito de simular vulnerabilidades o recursos atractivos para posibles atacantes y programas maliciosos.
+Los honeypots son sistemas de seguridad que se diseñan para atraer, detectar y analizar amenazas cibernéticas en una red, los cuales han evolucionado como una estrategia de seguridad crucial. Estos sistemas actúan como señuelos, estratégicamente desplegados con el propósito de simular vulnerabilidades o recursos atractivos para posibles atacantes y programas maliciosos.
 
 La función principal de un honeypot es recopilar información sobre tácticas de ataque, técnicas maliciosas y herramientas utilizadas por adversarios, donde las características clave son:
 
@@ -59,6 +68,8 @@ Existen diversas categorías o clasificaciones de honeypots, cada una diseñada 
 * **Honeypots de Cliente**: Se diseñan para simular sistemas cliente como estaciones de trabajo y tienen como propósito atraer ataques dirigidos a este tipo de sistemas. Estos honeypots se caracterizan por su enfoque específico en los vectores de ataque contra clientes y aplicaciones, lo que permite analizar y comprender las amenazas dirigidas a este entorno particular.
 * **Honeypots de Malware**: Se utilizan con el propósito de atraer y estudiar malware en un entorno controlado. Estos honeypots se caracterizan por simular vulnerabilidades o comportamientos específicos que atraen la atención de programas maliciosos.
 * **Honeypots de Hardware**: Se implementan utilizando hardware dedicado y tienen como propósito simular sistemas reales. Estos honeypots se caracterizan por ser dispositivos físicos diseñados para atraer y analizar amenazas específicas.
+* **Honeypots de SPAM**: Se diseñan para detectar y analizar ataques de correo no deseado. Estos honeypots se sitúan en entornos de red donde puedan atraer y registrar actividad maliciosa relacionada con el envío masivo de correos electrónicos.
+* **Honeypots de Bases de Datos**: Se destinan a proteger y detectar amenazas dirigidas a sistemas de gestión de bases de datos. Estos honeypots registran de forma detallada las consultas maliciosas y los intentos de acceso no autorizado.
 * **Honeypots de Investigación Académica**: Se emplean con fines educativos en entornos académicos para experimentación y aprendizaje. Estos honeypots se caracterizan por estar configurados de manera que permitan a los estudiantes profundizar en métodos de ataque y defensa.
 * **Honeynets**: Se identifican con conjuntos de honeypots que simulan una red completa. Estos sistemas presentan características que ofrecen una visión más amplia de las estrategias de ataque y las herramientas utilizadas, brindando una perspectiva integral.
 
@@ -79,42 +90,42 @@ Los metahoneypots se distinguen por su capacidad para simular una variedad de si
 * **Integración de Tecnologías Emergentes**: Al aprovechar tecnologías emergentes como el aprendizaje automático, mejoran la precisión en la identificación de amenazas.
 * **Respuestas Automáticas y Orquestadas**: De acuerdo a su configuración, pueden ir más allá de la mera detección y desencadenar respuestas automáticas o acciones orquestadas, proporcionando una defensa más dinámica.
 * **Capacidades de Engaño Avanzadas**: Estos honeypots avanzados son capaces de implementar tácticas de engaño más sofisticadas, confundiendo a los atacantes para que interactúen con entornos que parecen genuinos, pero que están cuidadosamente diseñados para recopilar información.
-* **Escalabilidad y Distribución**: Los metahoneypots pueden escalar eficientemente para abordar entornos complejos y distribuidos, adaptándose a las necesidades de organizaciones con infraestructuras extensas y diversas.
-* **Integración con Plataformas de Seguridad**: La capacidad de integrarse sin problemas con otras plataformas de seguridad (SIEM, EDR, ...) permite una gestión centralizada y una colaboración mayor en el panorama de la ciberseguridad.
+* **Escalabilidad y Distribución**: Pueden escalar eficientemente para abordar entornos complejos y distribuidos, adaptándose a las necesidades de organizaciones con infraestructuras extensas y diversas.
+* **Integración con Plataformas de Seguridad**: La capacidad de integrarse sin problemas con otras plataformas de seguridad (SIEM, EDR, ...) permite una gestión centralizada y una colaboración mayor.
 
 En su totalidad, estos honeypots se presentan como una herramienta avanzada y esencial para la detección proactiva y el análisis inteligente de amenazas cibernéticas en el contexto de entornos empresariales de creciente complejidad.
 
 
-<div id='tendenciasactuales'/>
+<div id='implementacionejecutiva'/>
 
-## Tendencias Actuales
+## Implementación Ejecutiva
+
+
+<div id='implementacionejecutivatendenciasactuales'/>
+
+### Tendencias Actuales
 
 En el panorama actual de la ciberseguridad, se observa una marcada evolución en la sofisticación de las amenazas cibernéticas. Los actores maliciosos emplean tácticas avanzadas para eludir las medidas tradicionales de seguridad y, esta realidad ha impulsado la necesidad de herramientas más avanzadas y adaptables para contrarrestar las amenazas emergentes.
 
 En este contexto, los honeypots han experimentado una transformación significativa, evolucionando hacia metahoneypots capaces de ofrecer una respuesta eficaz y personalizada ante las tácticas en constante cambio.
 
-Al simular entornos de red complejos y heterogéneos, estos honeypots avanzados no solo ofrecen una representación más realista, sino que también permiten la detección temprana y precisa de amenazas, pudiendo adaptarse dinámicamente a las tácticas cambiantes de los atacantes lo que brinda una ventaja significativa y proporciona a las organizaciones una herramienta proactiva y estratégica para defenderse.
+Al simular entornos de red complejos y heterogéneos, estos honeypots avanzados no solo ofrecen una representación más realista, sino que también permiten la detección temprana y precisa de amenazas, pudiendo adaptarse dinámicamente a las tácticas cambiantes de los atacantes, lo que brinda una ventaja significativa y proporciona a las organizaciones una herramienta proactiva y estratégica para defenderse.
 
 
-<div id='implementacionestrategica'/>
+<div id='implementacionejecutivadespliegue'/>
 
-## Implementación Estratégica
+### Despliegue
 
-
-<div id='implementacionestrategicaintroduccion'/>
-
-### Introducción
-
-Los honeypots pueden actuar como un medio para someter a prueba las defensas existentes en un entorno dinámico. Al exponer deliberadamente señuelos atractivos, los honeypots identifican posibles lagunas que podrían pasar desapercibidas por otras capas de seguridad, mientras la información recopilada no solo valida la eficacia de las medidas de seguridad, sino que también orienta la mejora continua al revelar áreas específicas que requieren atención y fortalecimiento.
+Los honeypots pueden actuar como un medio para someter a prueba las defensas existentes en un entorno dinámico. Al exponer deliberadamente señuelos atractivos, los honeypots identifican posibles lagunas que podrían pasar desapercibidas por otras capas de seguridad, mientras la información recopilada no solo valida la eficacia de las medidas de seguridad sino que también orienta la mejora continua al revelar áreas específicas que requieren atención y fortalecimiento.
 
 La correcta implementación de metahoneypots, tanto en la infraestructura externa como interna de una organización, es un proceso complejo que involucra la **configuración, personalización y despliegue de una selección específica de honeypots** a fin de simular servicios reales y detectar amenazas cibernéticas de forma anticipada.
 
 Para llevar a cabo una implementación efectiva, se deben tener en cuenta diversos factores, como la topología de la red, el tipo de activos que se desean exponer y los escenarios de amenazas específicos a desplegar. Además, un punto muy importante a resaltar es que la monitorización continua y la actualización de las firmas y perfiles de amenazas son esenciales para mantener la eficacia de los metahoneypots en constante evolución.
 
 
-<div id='implementacionestrategicahoneypots'/>
+<div id='implementacionejecutivalistadodehoneypots'/>
 
-### Honeypots
+### Listado de Honeypots
 
 Entre los posibles honeypots a desplegar en la infraestructura de la organización, estarían los siguientes:
 
@@ -124,7 +135,7 @@ Entre los posibles honeypots a desplegar en la infraestructura de la organizaci�
 | [Cowrie](https://github.com/cowrie/cowrie)                           | Cowrie es un honeypot de interacción media a alta diseñado para registrar ataques de fuerza bruta y la interacción de la shell realizada por el atacante.                                                                                 | SSH, Telnet                                                                                                                                                   |
 | [Conpot](https://github.com/mushorg/conpot)                          | Conpot es un honeypot para sistemas de control industrial (ICS)                                                                                                                                                                           | FTP, TFTP, HTTP, S7COMM, Modbus, ipmi, IEC104, Kamstrup meter, Guardian AST, Ethernet/IP, BACnet                                                              |
 | [Gaspot](https://github.com/sjhilt/GasPot)                           | GasPot es un honeypot diseñado para simular un Veeder Root Guardian AST. Estos medidores de tanques son comunes en la industria del petróleo y gas para los tanques de estaciones de servicio y ayudan con el inventario de combustibles. | Guardian AST                                                                                                                                                  |
-| [Qhoneypots](https://github.com/qeeqbox/honeypots)                   | 25 honeypots diferentes en un único paquete de PyPI para monitorear el tráfico de red, las actividades de bots y las credenciales de nombre de usuario y contraseña.                                                                      | DNS, Elastic, FTP, HTTP, HTPS, IMAP, IRC, LDAP, Memcached, MSSQL, MYSQL, NTP, ORACLE, POP3, PostgreSQL, Redis, SIP, SMB, SMTP, SNMP, SOCKS5, SSH, Telnet, VNC |
+| [Qhoneypots](https://github.com/qeeqbox/honeypots)                   | 30 honeypots diferentes en un único paquete de PyPI para monitorear el tráfico de red, las actividades de bots y las credenciales de nombre de usuario y contraseña.                                                                      | DNS, Elastic, FTP, HTTP, HTPS, IMAP, IRC, LDAP, Memcached, MSSQL, MYSQL, NTP, ORACLE, POP3, PostgreSQL, Redis, SIP, SMB, SMTP, SNMP, SOCKS5, SSH, Telnet, VNC |
 | [Glutton](https://github.com/mushorg/glutton)                        | Glutton proporciona un proxy SSH y TCP. El proxy SSH funciona como un intermediario entre el atacante y el servidor para registrar todo en texto plano.                                                                                   | SSH                                                                                                                                                           |
 | [HellPot](https://github.com/yunginnanet/HellPot)                    | Hellpot es un honeypot basado en Heffalump que recopila información sobre bots HTTP.                                                                                                                                                      | HTTP                                                                                                                                                          |
 | [Log4Pot](https://github.com/thomaspatzke/Log4Pot)                   | Un honeypot para la vulnerabilidad Log4Shell (CVE-2021-44228).                                                                                                                                                                            | HTTP, HTTPS                                                                                                                                                   |
@@ -147,6 +158,89 @@ Entre los posibles honeypots a desplegar en la infraestructura de la organizaci�
 | [Honeytrap](https://github.com/honeytrap/honeytrap)                  | Honeytrap es una herramienta de seguridad de red diseñada para observar ataques contra servicios TCP o UDP.                                                                                                                               | ADB, Counterstrike, CWmp tr-069, DNS, Echo, Elasticsearch, EOS, Ethereum, HTTP, HTTPS, IPP, LDAP, Memcached, Redis, SMTP, SSH, Telnet, TFTP, VNC              |
 
 
+<div id='implementacionestrategica'/>
+
+## Implementación Estratégica
+
+
+<div id='implementacionestrategicaentorno'/>
+
+### Entorno
+
+Antes de proceder con el despliegue, es esencial realizar pruebas preliminares para determinar la cantidad adecuada de honeypots y su localización exacta, asegurando así un despliegue efectivo. En este contexto, es necesario que al menos la primera máquina de pruebas cuente con las siguientes especificaciones técnicas, a fin de asegurar un desempeño óptimo y coherente con los requerimientos de la tarea:
+
+|                                     |                                              |
+|-------------------------------------|----------------------------------------------|
+| **Hardware**                        | Almacenamiento (128 GB), Memoria RAM (16 GB) |
+| **Sistema Operativo**               | Debian                                       |
+| **Copia de Seguridad / Frecuencia** | Si / Cada dos semanas                        |
+| **Monitorización de Servicios**     | No                                           |
+| **Vida Útil**                       | N/A                                          |
+| **Comentarios**                     | Máquina de pruebas                           |
+
+
+<div id='implementacionestrategicahoneypotsdeproduccionsimulados'/>
+
+### Honeypots de Producción - Simulados
+
+
+<div id='implementacionestrategicahoneypotsdeproduccionsimuladosqhoneypots'/>
+
+#### QHoneypots
+
+<div style="text-align:left">
+    <img src="images/qhoneypots.png" />
+</div>
+
+```
+sudo apt-get install postgresql
+sudo apt-get install python-psycopg2
+sudo apt-get install libpq-dev
+pip3 install honeypots
+```
+
+```
+curl https://raw.githubusercontent.com/qeeqbox/honeypots/main/tpot.txt > config.json
+sudo -E python3 -m honeypots --setup http --config config.json
+sudo -E python3 -m honeypots --setup ssh,mysql --options capture_commands --config config.json
+```
+
+
+<div id='implementacionestrategicahoneypotsdeproduccionsimuladostpot'/>
+
+#### T-PoT
+
+<div style="text-align:left">
+    <img src="images/tpot.png" />
+</div>
+
+
+```
+git clone https://github.com/telekom-security/tpotce
+cd tpotce/iso/installer/
+sudo su -
+./install.sh --type=user
+```
+
+```
+https://localhost:64297
+```
+
+
+<div id='implementacionestrategicahoneypotsdeproduccionreal'/>
+
+### Honeypots de Producción - Real
+
+
+<div id='implementacionestrategicahoneypotsdeproduccionrealdirectorioactivo'/>
+
+#### Directorio Activo
+
+<div style="text-align:left">
+    <img src="images/activedirectory.png" />
+</div>
+
+
 <div id='referencias'/>
 
 ## Referencias
@@ -161,6 +255,7 @@ Entre los posibles honeypots a desplegar en la infraestructura de la organizaci�
 * [Web LinkedIn: Honeypots o el arte del engaño (II)](https://es.linkedin.com/pulse/honeypots-o-el-arte-del-enga%C3%B1o-ii-roberto-ivars)
 * [Web Hacking Articles: Comprehensive Guide on Honeypots](https://www.hackingarticles.in/comprehensive-guide-on-honeypots/)
 * [Web Medium: Understanding Honeypots - A Powerful Tool for Improving Network Security](https://medium.com/@cyber_kid12/understanding-honeypots-a-powerful-tool-for-improving-network-security-45ea4a0ba6b1)
+* [Web Medium: Creating and configuring a Honeypot account in Active Directory](https://pswalia2u.medium.com/creating-and-configuring-a-honeypot-account-in-active-directory-94153385275d)
 * [Paper: Bitter Harvest- Systematically Fingerprinting Low and Medium interaction Honeypots at Internet Scale](https://www.cl.cam.ac.uk/~amv42/papers/vetterl-clayton-bitter-harvest-woot-18.pdf)
 * [Paper: Gas what? - I can see your GasPots. Studying the fingerprintability of ICS honeypots in the wild](https://www.researchgate.net/publication/338128200_Gas_what_I_can_see_your_GasPots_Studying_the_fingerprintability_of_ICS_honeypots_in_the_wild#pf3)
 * [Github: HASSH - Network fingerprinting standard](https://github.com/salesforce/hassh)
