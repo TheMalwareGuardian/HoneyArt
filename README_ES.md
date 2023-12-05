@@ -11,17 +11,21 @@
 3. [Categorías de Honeypots](#categoriasdehoneypots)
 4. [MetaHoneypots y su Aplicación Práctica](#metahoneypotsysuaplicacionpractica)
 5. [Implementación Ejecutiva](#implementacionejecutiva)
-    - [Tendencias Actuales](#implementacionejecutivatendenciasactuales)
+    - [Tendencia Actual](#implementacionejecutivatendenciaactual)
     - [Despliegue](#implementacionejecutivadespliegue)
     - [Listado de Honeypots](#implementacionejecutivalistadodehoneypots)
-5. [Implementación Estratégica](#implementacionestrategica)
+6. [Implementación Estratégica](#implementacionestrategica)
     - [Entorno](#implementacionestrategicaentorno)
     - [Honeypots de Producción - Simulados](#implementacionestrategicahoneypotsdeproduccionsimulados)
         - [QHoneypots](#implementacionestrategicahoneypotsdeproduccionsimuladosqhoneypots)
         - [T-PoT](#implementacionestrategicahoneypotsdeproduccionsimuladostpot)
     - [Honeypots de Producción - Real](#implementacionestrategicahoneypotsdeproduccionreal)
         - [Directorio Activo](#implementacionestrategicahoneypotsdeproduccionrealdirectorioactivo)
-6. [Referencias](#referencias)
+        - [Apache HTTP](#implementacionestrategicahoneypotsdeproduccionrealapachehttp)
+7. [Caso Práctico](#casopractico)
+    - [Monitorización](#casopracticomonitorizacion)
+    - [Máquinas](#casopracticomaquinas)
+8. [Referencias](#referencias)
 
 
 <div id='resumen'/>
@@ -50,7 +54,7 @@ La función principal de un honeypot es recopilar información sobre tácticas d
 * **Investigación y Análisis**: La información recopilada por los honeypots se convierte en fundamental para la investigación de amenazas y el análisis forense, ya que proporciona nuevas perspectivas sobre tácticas de ataque y patrones emergentes.
 * **Desvío de Atacantes**: Al atraer a los atacantes hacia entornos controlados, los honeypots ayudan a desviar la atención y los esfuerzos maliciosos lejos de los sistemas críticos y recursos reales.
 * **Fortalecimiento de la Seguridad**: El conocimiento adquirido a través de los honeypots permite fortalecer las medidas de seguridad, mejorando la resiliencia de la infraestructura.
-* **Integración con Sistemas de Auxiliares**: Los datos recopilados por los honeypots pueden integrarse con sistemas de seguridad más amplios (SIEM, EDR, ...), mejorando la capacidad de respuesta y la coordinación en tiempo real frente a amenazas.
+* **Integración con Sistemas Auxiliares**: Los datos recopilados por los honeypots pueden integrarse con sistemas de seguridad más amplios (SIEM, EDR, ...), mejorando la capacidad de respuesta y la coordinación en tiempo real frente a amenazas.
 
 En síntesis, los honeypots son herramientas estratégicas que desempeñan un papel crucial en la ciberseguridad al proporcionar una visión única de las tácticas que llevan a cabo los atacantes y mejorar la capacidad de defensa de las organizaciones.
 
@@ -65,9 +69,9 @@ Existen diversas categorías o clasificaciones de honeypots, cada una diseñada 
 * **Honeypots de Producción (Alta Interacción)**: Se conciben con el objetivo de detectar y responder a amenazas en tiempo real y se integran directamente en la infraestructura operativa de una organización. Estos honeypots, caracterizados por su complejidad, poseen la capacidad de interactuar de manera profunda con los atacantes, incluyendo respuestas automáticas.
 * **Honeypots de Baja Interacción**: Se diseñan con el propósito de simular servicios y sistemas operativos, limitando sus interacciones para minimizar los riesgos asociados de un ataque exitoso. Estos honeypots presentan características menos complejas y constituyen una opción menos invasiva en comparación con los de alta interacción, pudiendo identificar amenazas de manera segura y controlada.
 * **Honeypots de Media Interacción**: Se corresponden con una combinación equilibrada entre la complejidad de los honeypots de alta interacción y la menor invasividad de los de baja interacción. Estos honeypots tienen como propósito simular servicios y sistemas operativos con un nivel intermedio de interacción.
-* **Honeypots de Cliente**: Se diseñan para simular sistemas cliente como estaciones de trabajo y tienen como propósito atraer ataques dirigidos a este tipo de sistemas. Estos honeypots se caracterizan por su enfoque específico en los vectores de ataque contra clientes y aplicaciones, lo que permite analizar y comprender las amenazas dirigidas a este entorno particular.
+* **Honeypots de Cliente**: Se diseñan para simular sistemas cliente como estaciones de trabajo y tienen como propósito atraer ataques dirigidos a este tipo de sistemas. Estos honeypots se caracterizan por su enfoque específico en los vectores de ataque contra clientes y aplicaciones, lo que permite analizar y comprender las amenazas dirigidas a este entorno en particular.
 * **Honeypots de Malware**: Se utilizan con el propósito de atraer y estudiar malware en un entorno controlado. Estos honeypots se caracterizan por simular vulnerabilidades o comportamientos específicos que atraen la atención de programas maliciosos.
-* **Honeypots de Hardware**: Se implementan utilizando hardware dedicado y tienen como propósito simular sistemas reales. Estos honeypots se caracterizan por ser dispositivos físicos diseñados para atraer y analizar amenazas específicas.
+* **Honeypots de Hardware**: Se implementan utilizando hardware dedicado y tienen como propósito simular sistemas reales. Estos honeypots se caracterizan por ser dispositivos físicos, diseñados para atraer y analizar amenazas específicas.
 * **Honeypots de SPAM**: Se diseñan para detectar y analizar ataques de correo no deseado. Estos honeypots se sitúan en entornos de red donde puedan atraer y registrar actividad maliciosa relacionada con el envío masivo de correos electrónicos.
 * **Honeypots de Bases de Datos**: Se destinan a proteger y detectar amenazas dirigidas a sistemas de gestión de bases de datos. Estos honeypots registran de forma detallada las consultas maliciosas y los intentos de acceso no autorizado.
 * **Honeypots de Investigación Académica**: Se emplean con fines educativos en entornos académicos para experimentación y aprendizaje. Estos honeypots se caracterizan por estar configurados de manera que permitan a los estudiantes profundizar en métodos de ataque y defensa.
@@ -84,7 +88,7 @@ La estrategia adecuada a seguir, es una combinación de honeypots más complejos
 
 Los metahoneypots se distinguen por su capacidad para simular una variedad de sistemas y servicios, proporcionando una capa adicional de complejidad y realismo en la detección de amenazas. Estos sistemas van más allá de los honeypots convencionales al incorporar características avanzadas que amplían su utilidad y eficacia, siendo la evolución en este área. Entre las características adicionales que incluyen los metahoneypots están:
 
-* **Versatilidad en Simulación**: Su versatilidad les permite simular no solo sistemas individuales, sino una variedad completa de entornos y servicios, ofreciendo una representación más completa y realista.
+* **Versatilidad en la Simulación**: Su versatilidad les permite simular no solo sistemas individuales, sino una variedad completa de entornos y servicios, ofreciendo una representación más completa y realista.
 * **Adaptabilidad Dinámica**: Tienen la capacidad de adaptarse dinámicamente a las tácticas cambiantes de los atacantes, pudiendo ajustar su comportamiento y entorno para reflejar las últimas amenazas y tendencias en ciberseguridad.
 * **Análisis de Amenazas Multifacético**: Además de la detección de amenazas, pueden realizar un análisis más profundo y multifacético de los comportamientos de los atacantes, identificando patrones y estrategias específicas utilizadas en diferentes fases del ataque.
 * **Integración de Tecnologías Emergentes**: Al aprovechar tecnologías emergentes como el aprendizaje automático, mejoran la precisión en la identificación de amenazas.
@@ -101,9 +105,9 @@ En su totalidad, estos honeypots se presentan como una herramienta avanzada y es
 ## Implementación Ejecutiva
 
 
-<div id='implementacionejecutivatendenciasactuales'/>
+<div id='implementacionejecutivatendenciaactual'/>
 
-### Tendencias Actuales
+### Tendencias Actual
 
 En el panorama actual de la ciberseguridad, se observa una marcada evolución en la sofisticación de las amenazas cibernéticas. Los actores maliciosos emplean tácticas avanzadas para eludir las medidas tradicionales de seguridad y, esta realidad ha impulsado la necesidad de herramientas más avanzadas y adaptables para contrarrestar las amenazas emergentes.
 
@@ -137,6 +141,8 @@ Entre los posibles honeypots a desplegar en la infraestructura de la organizaci�
 | [Gaspot](https://github.com/sjhilt/GasPot)                           | GasPot es un honeypot diseñado para simular un Veeder Root Guardian AST. Estos medidores de tanques son comunes en la industria del petróleo y gas para los tanques de estaciones de servicio y ayudan con el inventario de combustibles. | Guardian AST                                                                                                                                                  |
 | [Qhoneypots](https://github.com/qeeqbox/honeypots)                   | 30 honeypots diferentes en un único paquete de PyPI para monitorear el tráfico de red, las actividades de bots y las credenciales de nombre de usuario y contraseña.                                                                      | DNS, Elastic, FTP, HTTP, HTPS, IMAP, IRC, LDAP, Memcached, MSSQL, MYSQL, NTP, ORACLE, POP3, PostgreSQL, Redis, SIP, SMB, SMTP, SNMP, SOCKS5, SSH, Telnet, VNC |
 | [Glutton](https://github.com/mushorg/glutton)                        | Glutton proporciona un proxy SSH y TCP. El proxy SSH funciona como un intermediario entre el atacante y el servidor para registrar todo en texto plano.                                                                                   | SSH                                                                                                                                                           |
+| [PyRDP](https://github.com/GoSecure/pyrdp)                           | Un señuelo para atraer ataques que se aprovechan del protocolo Winbox de MikroTik.                                                                                                                                                        | RDP                                                                                                                                                           |
+| [pywinbox](https://github.com/NozomiNetworks/pywinbox)               | Un honeypot para el protocolo Winbox de MikroTik.                                                                                                                                                                                         | Winbox                                                                                                                                                        |
 | [HellPot](https://github.com/yunginnanet/HellPot)                    | Hellpot es un honeypot basado en Heffalump que recopila información sobre bots HTTP.                                                                                                                                                      | HTTP                                                                                                                                                          |
 | [Log4Pot](https://github.com/thomaspatzke/Log4Pot)                   | Un honeypot para la vulnerabilidad Log4Shell (CVE-2021-44228).                                                                                                                                                                            | HTTP, HTTPS                                                                                                                                                   |
 | [medpot](https://github.com/schmalle/medpot)                         | Un honeypot que intenta emular HL7/FHIR.                                                                                                                                                                                                  | HL7/FHIR                                                                                                                                                      |
@@ -151,7 +157,8 @@ Entre los posibles honeypots a desplegar en la infraestructura de la organizaci�
 | [Dionaea](https://github.com/DinoTools/dionaea)                      | Dionaea está destinado a ser un sucesor de Nepenthes, con soporte para IPv6 y TLS, y utiliza Python como lenguaje de scripting.                                                                                                           | Telnet, DNS, NTP, EPMAP, FTP, HTTP, Memcached, Mirror, MQTT, MSSQL, MYSQL, PPTP, SIP, SMB, TFTP, UPNP                                                         |
 | [IPP Honey](https://gitlab.com/bontchev/ipphoney)                    | Simula una impresora que admite el Protocolo de Impresión por Internet y está expuesta a Internet.                                                                                                                                        | IPP                                                                                                                                                           |
 | [mailoney](https://github.com/phin3has/mailoney)                     | Honeypot SMTP escrito con fines educativos y de aprendizaje.                                                                                                                                                                              | SMTP                                                                                                                                                          |
-| [RedisHoneyPot](https://github.com/cypwnpwnsocute/RedisHoneyPot)     | Solución de honeypot de alta interacción para el protocolo Redis.                                                                                                                                                                         | Redis                                                                                                                                                         |
+| [RedisHoneyPot](https://github.com/cypwnpwnsocute/RedisHoneyPot)     | Solución de honeypot de alta interacción para el protocolo. Redis.                                                                                                                                                                        | Redis                                                                                                                                                         |
+| [RIoTPot](https://github.com/aau-network-security/riotpot)           | RIoTPot es un honeypot de interacción híbrida, centrado principalmente en la emulación de protocolos IoT y OT.                                                                                                                            | Echo, SSH, Telnet, HTTP, Modbus, MQTT, CoAP                                                                                                                   |
 | [Heralding](https://github.com/johnnykv/heralding)                   | Un honeypot simple que recopila credenciales.                                                                                                                                                                                             | FTP, HTTP, HTTPS, IMAP, IMAPS, MYSQL, POP3, POP3S, PostgreSQL, RDP, SMTP, SMTPS, SOCKS5, SSH, Telnet, VNC                                                     |
 | [Snare](https://github.com/mushorg/snare)                            | Snare es un sensor de honeypot de aplicación web que atrae todo tipo de comportamiento malicioso desde Internet.                                                                                                                          |                                                                                                                                                               |
 | [Tanner](https://github.com/mushorg/tanner)                          | Tanner es un servicio remoto de análisis y clasificación de datos para evaluar solicitudes HTTP y componer la respuesta, luego servida por SNARE. Utiliza múltiples técnicas de emulación de vulnerabilidades de aplicaciones.            |                                                                                                                                                               |
@@ -189,7 +196,7 @@ Antes de proceder con el despliegue, es esencial realizar pruebas preliminares p
 #### QHoneypots
 
 <div style="text-align:left">
-    <img src="images/qhoneypots.png" />
+    <a href="https://github.com/qeeqbox/honeypots"><img src="images/qhoneypots.png" /></a>
 </div>
 
 ```
@@ -211,7 +218,7 @@ sudo -E python3 -m honeypots --setup ssh,mysql --options capture_commands --conf
 #### T-PoT
 
 <div style="text-align:left">
-    <img src="images/tpot.png" />
+    <a href="https://github.com/telekom-security/tpotce"><img src="images/tpot.png" /></a>
 </div>
 
 
@@ -237,8 +244,96 @@ https://localhost:64297
 #### Directorio Activo
 
 <div style="text-align:left">
-    <img src="images/activedirectory.png" />
+    <a href="https://learn.microsoft.com/en-us/windows-server/identity/ad-ds/get-started/virtual-dc/active-directory-domain-services-overview"><img src="images/activedirectory.png" /></a>
 </div>
+
+
+<div id='implementacionestrategicahoneypotsdeproduccionrealapachehttp'/>
+
+#### Apache HTTP
+
+<div style="text-align:left">
+    <a href="https://httpd.apache.org/"><img src="images/apache.png" /></a>
+</div>
+
+
+<div id='casopractico'/>
+
+## Caso Práctico
+
+Este caso se corresponde con un ejemplo general y se debe adaptar según las necesidades que se presenten. Se proporciona una guía para el despliegue de determinadas categorías de honeypots en diferentes ubicaciones de red y plantillas de máquinas con conjuntos de servicios reales.
+
+
+<div id='casopracticomonitorizacion'/>
+
+### Monitorización
+
+| **Ubicación** | **Categoría** | **Detección y Respuesta** |
+|:-------------:|:------------:|-----------|
+| Red Externa | Acceso remoto | - Registro de intentos de acceso remoto a través de los protocolos SSH y RDP<br/> - Análisis de patrones de comportamiento. |
+| Red Externa | Tráfico de red general  | - Monitorización de solicitudes HTTP/HTTPS<br/> - Identificación de patrones de ataques a aplicaciones web<br/> - Detección de intentos de denegación de servicio (DoS)<br/> - Registro de actividades relacionadas con bases de datos |
+| Red Externa | Correo electrónico  | - Simulación de servidor de correo vulnerable<br/> - Análisis de phishing y contenidos maliciosos. |
+| Red Externa | ICS/SCADA  | - Emulación de sistemas de control industrial<br/> - Detección de amenazas avanzadas |
+| Red Interna | Tráfico de red general | - Monitorización de carpetas compartidas<br/> - Análisis del tráfico de red general<br/> - Identificación de patrones de actividad maliciosa<br/> - Recopilación de información sobre bots |
+| Red Interna | Directorio activo | - Detección de accesos no autorizados<br/> - Detección de movimientos laterales|
+| ... | ... | ... | ... |
+
+
+<div id='casopracticomaquinas'/>
+
+### Máquinas
+
+
+| **Máquina**                                      | **Servicio**        | **Puerto** | **Honeypot**    |
+|--------------------------------------------------|---------------------|------------|-----------------|
+| Máquina Acceso Remoto - Sistema Linux Bastionado | SSH                 | 22         | Cowrie          |
+|                                                  |                     |            |                 |
+| Máquina Linux - Servidor Web Apache              | SSH                 | 22         | qHoneypots      |
+|                                                  | HTTP                | 80         | qHoneypots      |
+|                                                  | MYSQL               | 3306       | qHoneypots      |
+|                                                  |                     |            |                 |
+| Máquina Windows - Servidor Web IIS               | FTP                 | 21         | qHoneypots      |
+|                                                  | HTTP                | 80         | qHoneypots      |
+|                                                  | MSSQL               | 1433       | qHoneypots      |
+|                                                  |                     |            |                 |
+| Máquina Windows - Carpeta Compartida             | LDAP                | 389        | qHoneypots      |
+|                                                  | SMB                 | 445        | qHoneypots      |
+|                                                  |                     |            |                 |
+| Máquina ICS - Planta eléctrica 1                 | FTP                 | 21         | Conpot          |
+|                                                  | HTTP                | 80         | Conpot          |
+|                                                  | S7comm              | 102        | Conpot          |
+|                                                  | Modbus              | 502        | Conpot          |
+|                                                  | EtherNet/IP         | 44818      | Conpot          |
+|                                                  |                     |            |                 |
+| Máquina ICS - Planta eléctrica 2                 | SNMP                | 161        | Conpot          |
+|                                                  | Modbus              | 502        | Conpot          |
+|                                                  | IEC 104             | 2404       | Conpot          |
+|                                                  | EtherNet/IP         | 44818      | Conpot          |
+|                                                  |                     |            |                 |
+| Máquina ICS - Automatización de edificios        | FTP                 | 21         | Conpot          |
+|                                                  | SNMP                | 161        | Conpot          |
+|                                                  | BACnet              | 47808      | Conpot          |
+|                                                  |                     |            |                 |
+| Máquina ICS - Tanque Guardian AST Tank           | HTTP                | 80         | qHoneypots      |
+|                                                  | Guardian AST        | 10001      | Conpot o Gaspot |
+|                                                  | EtherNet/IP         | 44818      | Conpot          |
+|                                                  |                     |            |                 |
+| Máquina ICS - Medidor inteligente Kamstrup 382   | Kamstrup meter      | 1025       | Conpot          |
+|                                                  | Kamstrup management | 50100      | Conpot          |
+|                                                  |                     |            |                 |
+| Máquina ICS - Arduino MQTT                       | Telnet              | 23         | RIoTPot         |
+|                                                  | HTTP                | 80         | RIoTPot         |
+|                                                  | Modbus              | 502        | RIoTPot         |
+|                                                  | MQTT                | 1883       | RIoTPot         |
+|                                                  | COAP                | 5683       | RIoTPot         |
+|                                                  |                     |            |                 |
+| Máquina ICS - IPMI                               | IPMI                | 623        | Conpot          |
+|                                                  |                     |            |                 |
+| Máquina ICS - Servidor VOIP                      | SIP                 | 5060       | SentryPeer      |
+|                                                  |                     |            |                 |
+| Máquina ICS - Dispositivo Médico                 | HL7 FHIR            | 2575       | medpot          |
+|                                                  | DICOM               | 11112      | DICOMPOT        |
+| ...                                              | ...                 | ...        | ...             |
 
 
 <div id='referencias'/>
@@ -246,11 +341,14 @@ https://localhost:64297
 ## Referencias
 
 * [Github: Awesome Honeypots](https://github.com/paralax/awesome-honeypots)
+* [Github: Awesome Deception](https://github.com/tolgadevsec/Awesome-Deception)
 * [Github: T-Pot - The All In One Honeypot Platform](https://github.com/telekom-security/tpotce)
 * [Web Incibe: Industrial honeypot implementation guide](https://www.incibe-cert.es/sites/default/files/contenidos/guias/doc/incibe-cert_industrial_honeypot_implementation_guide.pdf)
 * [Web UNAM: Conpot - Honeypot de Sistemas de Control Industrial](https://revista.seguridad.unam.mx/numero29/conpot-honeypot-de-sistemas-de-control-industrial)
 * [Paper: SCADA Honeypots – An In-depth Analysis of Conpot](https://paper.vulsee.com/icsmaster/doc/%E5%9B%BD%E5%A4%96/SCADA%20Honeypots%20%E2%80%93%20An%20In-depth%20Analysis%20of%20Conpot.pdf)
 * [Paper: HoneyPLC: A Next-Generation Honeypot for Industrial Control Systems](https://dl.acm.org/doi/pdf/10.1145/3372297.3423356)
+* [Web SCADA HoneyNet Project: Building Honeypots for Industrial Networks](https://scadahoneynet.sourceforge.net/)
+* [Web Fortinet: Building and maintaining a honeypot for medical devices](https://filestore.fortinet.com/fortiguard/research/honeypot-botconf20.pdf)
 * [Web LinkedIn: Honeypots Types, Technologies, Detection Techniques, and Tools](https://www.linkedin.com/pulse/honeypots-types-technologies-detection-techniques-tools-ahmed-eissa/)
 * [Web LinkedIn: Honeypots o el arte del engaño (II)](https://es.linkedin.com/pulse/honeypots-o-el-arte-del-enga%C3%B1o-ii-roberto-ivars)
 * [Web Hacking Articles: Comprehensive Guide on Honeypots](https://www.hackingarticles.in/comprehensive-guide-on-honeypots/)
